@@ -1,7 +1,6 @@
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
-
-import javax.crypto.*;
+import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -13,6 +12,9 @@ import java.security.PublicKey;
 public class Person {
     private KeyPair myKeyPair;
     private PublicKey publicKeyOtherParty;
+
+
+    /**************************** GENERATING KEYS *******************************/
 
     public void generateKeyPair() {
         myKeyPair = Crypto.generateKeyPair();
@@ -30,6 +32,9 @@ public class Person {
     public SecretKey generateSessionKey() {
         return Crypto.generateSymmetricKey();
     }
+
+
+    /**************************** ENCRYPTION / DECRYPTION *******************************/
 
     public void encryptMessage(Message msg, byte[] sig, SecretKey sessionKey) {
         try {

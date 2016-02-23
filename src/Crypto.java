@@ -13,6 +13,10 @@ public class Crypto {
     public static final String SYMMETRIC_ALGORITHM = "AES";
 
 
+
+    /**************************** GENERATING KEYS *******************************/
+
+
     public static KeyPair generateKeyPair() {
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ASYMMETRIC_ALGORITHM);
@@ -23,6 +27,44 @@ public class Crypto {
         }
         return null;
     }
+
+    public static SecretKey generateSymmetricKey() {
+        try {
+            KeyGenerator keyGen = KeyGenerator.getInstance(SYMMETRIC_ALGORITHM);
+            return keyGen.generateKey();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**************************** ENCRYPTION / DECRYPTION *******************************/
+
+    public static byte[] encrypt(byte[] encryptMe, Key key, Cipher c) {
+        try {
+            c.init(ENCRYPT_MODE, key);
+            return c.doFinal(encryptMe);
+        } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static byte[] decrypt(byte[] decryptMe, Key key, Cipher c) {
+        try {
+            byte[] d = decryptMe;
+            c.init(Cipher.DECRYPT_MODE, key);
+            return c.doFinal(d);
+        } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+    /**************************** SIGNATURE / DIGEST *******************************/
 
     public static byte[] digest(String content) {
         MessageDigest md;
@@ -51,36 +93,6 @@ public class Crypto {
         return null;
     }
 
-    public static byte[] encrypt(byte[] encryptMe, Key key, Cipher c) {
-        try {
-            c.init(ENCRYPT_MODE, key);
-            return c.doFinal(encryptMe);
-        } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static byte[] decrypt(byte[] decryptMe, Key key, Cipher c) {
-        try {
-            byte[] d = decryptMe;
-            c.init(Cipher.DECRYPT_MODE, key);
-            return c.doFinal(d);
-        } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static SecretKey generateSymmetricKey() {
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance(SYMMETRIC_ALGORITHM);
-            return keyGen.generateKey();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     public static boolean verify(byte[] data, PublicKey publicKey, byte[] sign) {
         Signature signer;
